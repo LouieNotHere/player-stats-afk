@@ -7,7 +7,7 @@ function generateBackgroundColor() {
   body.style.backgroundColor = "hsl(" + hue + ", 100%, 25%)";
 }
 
-// logarithm function
+// logarithmic function
 function equationVal(x) {
   // for the rebirth bonus
   var s = localStorage.getItem('playerStatsAfk.rebirthMultiplier') || 0;
@@ -72,10 +72,10 @@ function deleteData() {
   }
 }
 
-// check if the user is eleligible to step ip
+// check if the user is eleligible to step up
 function checkEligibility(x) {
-  var button = document.getElementById("stepButton");
-  if (x >= 25) {
+  const button = document.getElementById("stepButton");
+  if (x >= 20) {
     button.disabled = false;
   } else {
     button.disabled = true;
@@ -184,17 +184,29 @@ function doSteps() {
   var level = equationVal(t);
   
   if (confirm("Are you sure you want to step up? This will put you back to the beginning, but you will gain more levels than last time.")) {
-    var today = new Date().toLocaleString();
+    // check if the bonus is more than the last one
+    var sp = localStorage.getItem('playerStatsAfk.rebirthMultiplier') || 0;
+    var steps = parseInt(sp);
     
-    localStorage.removeItem('playerStatsAfk.visitDateTime');
-    localStorage.removeItem('playerStatsAfk.rebirthMultiplier');
-    
-    getFirstDate();
-    
-    localStorage.setItem('playerStatsAfk.visitDateTime', today);
-    localStorage.setItem('playerStatsAfk.rebirthMultiplier', level);
-    
-    window.location.href = "index.html";
+    if (level > steps) {
+      var today = new Date().toLocaleString();
+      
+      localStorage.removeItem('playerStatsAfk.visitDateTime');
+      localStorage.removeItem('playerStatsAfk.rebirthMultiplier');
+      
+      getFirstDate();
+      
+      localStorage.setItem('playerStatsAfk.visitDateTime', today);
+      localStorage.setItem('playerStatsAfk.rebirthMultiplier', level);
+      
+      window.location.href = "index.html"
+    } else {
+      alert("Cannot proceed: Not enough steps! Left: " + (steps - level));
+      console.error("Cannot proceed: Not enough steps! Left: " + (steps - level));
+    }
+  } else {
+    alert("Cannot proceed: User cancelled the process");
+    console.error("Cannot proceed: User cancelled the process");
   }
 }
 
@@ -211,22 +223,21 @@ window.onload = function() {
   getUsername();
   
   setInterval(() => {
-    // for the level
-    var firstDate = localStorage.getItem('playerStatsAfk.visitDateTime');
-    var fd = new Date(firstDate).getTime();
+    var fd = localStorage.getItem('playerStatsAfk.visitDateTime');
+    var fdt = new Date(fd).getTime();
     
-    var present = new Date().getTime();
+    var p = new Date().getTime();
     
-    var t = ((present - fd) / 1000);
+    var ft = ((p - fdt) / 1000);
     
-    var level = equationVal(t);
+    var l = equationVal(ft); 
     
-    document.getElementById("level").innerHTML = "Level: " + level.toFixed(3);
+    document.getElementById("level").innerHTML = "Level: " + l.toFixed(3);
     
     // for the rank
-    document.getElementById("rank").innerHTML = "Rank: " + getRank(Math.trunc(level));
+    document.getElementById("rank").innerHTML = "Rank: " + getRank(Math.trunc(l));
     
-    checkEligibility(level);
+    checkEligibility(l);
   });
   
   // transition background for two seconds
