@@ -1,10 +1,42 @@
-// generate a background color
-function generateBackgroundColor() {
-  var hue = Math.floor(Math.random() * 360);
-  var sat = Math.floor(Math.random() * 100);
+// generate the color for the main ui
+function generateHue() {
+  return Math.floor(Math.random() * 360);
+}
+
+function generateColorUi() {
+  var hue = generateHue();
   
+  // get the tags
   var body = document.querySelector("body");
+  
+  // texts
+  var name = document.querySelector("#name");
+  var rank = document.querySelector("#rank");
+  var level = document.querySelector("#level");
+  var title = document.querySelector("#title");
+  var step = document.querySelector("#step");
+  var req = document.querySelector("#requirement");
+  var cre = document.querySelector("#creator");
+  var ver = document.querySelector("#version");
+  
+  // for the button
+  var button = document.querySelector("#stepButton");
+  
   body.style.backgroundColor = "hsl(" + hue + ", 100%, 25%)";
+  
+  // text ids
+  name.style.color = "hsl(" + hue + ", 100%, 75%)";
+  rank.style.color = "hsl(" + hue + ", 100%, 75%)";
+  level.style.color = "hsl(" + hue + ", 100%, 75%)";
+  title.style.color = "hsl(" + hue + ", 100%, 75%)";
+  step.style.color = "hsl(" + hue + ", 100%, 75%)";
+  req.style.color = "hsl(" + hue + ", 100%, 75%)";
+  cre.style.color = "hsl(" + hue + ", 100%, 75%)";
+  ver.style.color = "hsl(" + hue + ", 100%, 75%)";
+  
+  // button
+  button.style.backgroundColor = "hsl(" + hue + ", 100%, 10%)";
+  button.style.shadowBox  = "hsl(" + hue + ", 100%, 10%)";
 }
 
 // logarithmic function
@@ -17,9 +49,9 @@ function equationVal(x) {
   var stepBonus = 1 + (steps / 100);
   var timeBonus = x / 86400;
   var tinyBonus = x / (Math.PI * 10000);
-  var xBonus = x ** 0.25;
+  var xBonus = (x + stepBonus) ** 0.25;
   
-  return ((log + timeBonus + tinyBonus + xBonus) + 2) * stepBonus;
+  return (((log + timeBonus + tinyBonus + xBonus) + 2) * (stepBonus * (1 + (Math.PI / 10)))) + (Math.min(log, steps) / 1.876);
 }
 
 // first function for newbies
@@ -95,32 +127,111 @@ function getRank(x) {
   
   // all ranks
   var ranks = [
-    "Unranked",
-    "Rookie",
+    "Trainee",
     "Novice",
+    "Newbie",
     "Beginner",
+    "Learner",
     "Apprentice",
+    "Rookie",
     "Amateur",
+    "Initiate",
+    "Student",
+    "Cadet",
+    "Junior",
+    "Aspirant",
+    "Recruit",
+    "Neophyte",
     "Intermediate",
+    "Skilled",
     "Advanced",
-    "Professional",
+    "Practitioner",
+    "Proficient",
+    "Journeyman",
+    "Competent",
+    "Pro",
     "Expert",
+    "Specialist",
     "Adept",
     "Veteran",
+    "Professional",
+    "Elite",
     "Master",
     "Grandmaster",
     "Champion",
-    "Elite",
-    "Legend",
+    "Hero",
     "Virtuoso",
+    "Legend",
+    "Paragon",
     "Overlord",
+    "Savant",
     "Titan",
+    "Visionary",
     "Ascendant",
     "Supreme",
-    "Immortal"
-  ];
+    "Immortal",
+    "Deity",
+    "Mythic",
+    "Transcendent",
+    "Ethereal",
+    "Celestial",
+    "Omniscient",
+    "Omnipotent"
+  ]; 
   
-  if (level > 1000) {
+  if (level >= 20000) {
+    return ranks[49];
+  } else if (level >= 15000) {
+    return ranks[48];
+  } else if (level >= 12500) {
+    return ranks[47];
+  } else if (level >= 10000) {
+    return ranks[46];
+  } else if (level >= 9000) {
+    return ranks[45];
+  } else if (level >= 8000) {
+    return ranks[44];
+  } else if (level >= 7500) {
+    return ranks[43];
+  } else if (level >= 7000) {
+    return ranks[42];
+  } else if (level >= 6500) {
+    return ranks[41];
+  } else if (level >= 6000) {
+    return ranks[40];
+  } else if (level >= 5500) {
+    return ranks[39];
+  } else if (level >= 5000) {
+    return ranks[38];
+  } else if (level >= 4500) {
+    return ranks[37];
+  } else if (level >= 4000) {
+    return ranks[36];
+  } else if (level >= 3500) {
+    return ranks[35];
+  } else if (level >= 3000) {
+    return ranks[34];
+  } else if (level >= 2750) {
+    return ranks[33];
+  } else if (level >= 2500) {
+    return ranks[32];
+  } else if (level >= 2250) {
+    return ranks[31];
+  } else if (level >= 2000) {
+    return ranks[30];
+  } else if (level >= 1750) {
+    return ranks[29];
+  } else if (level >= 1500) {
+    return ranks[28];
+  } else if (level >= 1400) {
+    return ranks[27];
+  } else if (level >= 1300) {
+    return ranks[26];
+  } else if (level >= 1200) {
+    return ranks[25];
+  } else if (level >= 1100) {
+    return ranks[24];
+  } else if (level >= 1000) {
     return ranks[23];
   } else if (level >= 900) {
     return ranks[22];
@@ -188,6 +299,8 @@ function doSteps() {
     var sp = localStorage.getItem('playerStatsAfk.rebirthMultiplier') || 0;
     var steps = parseInt(sp);
     
+    var difference = steps - level;
+    
     if (level > steps) {
       var today = new Date().toLocaleString();
       
@@ -199,10 +312,10 @@ function doSteps() {
       localStorage.setItem('playerStatsAfk.visitDateTime', today);
       localStorage.setItem('playerStatsAfk.rebirthMultiplier', level);
       
-      window.location.href = "index.html"
+      window.location.href = "index.html";
     } else {
-      alert("Cannot proceed: Not enough steps! Left: " + (steps - level));
-      console.error("Cannot proceed: Not enough steps! Left: " + (steps - level));
+      alert("Cannot proceed: Not enough steps! Left: " + difference.toFixed(3));
+      console.error("Cannot proceed: Not enough steps! Left: " + difference.toFixed(3));
     }
   } else {
     alert("Cannot proceed: User cancelled the process");
@@ -211,15 +324,15 @@ function doSteps() {
 }
 
 // change background color for aesthetics
-function transitionBackgroundColor() {
-  setInterval(generateBackgroundColor, 2000);
+function transitionColorUi() {
+  setInterval(generateColorUi, 2000);
 }
 
 window.onload = function() {
   // execute this function for the user when they visited the page for the first time
   firstFunc();
   
-  generateBackgroundColor();
+  generateColorUi();
   getUsername();
   
   setInterval(() => {
@@ -241,5 +354,5 @@ window.onload = function() {
   });
   
   // transition background for two seconds
-  setTimeout(transitionBackgroundColor, 2000);
+  setTimeout(transitionColorUi, 2000);
 }
