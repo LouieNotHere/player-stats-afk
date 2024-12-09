@@ -46,12 +46,13 @@ function equationVal(x) {
   var steps = parseInt(s);
   
   var log = Math.log(x) / Math.log(2);
-  var stepBonus = 1 + (steps / 100);
+  var stepMulti = 1 + (steps / 100);
   var timeBonus = x / 86400;
   var tinyBonus = x / (Math.PI * 10000);
-  var xBonus = (x + stepBonus) ** 0.25;
+  var stepBonus = tinyBonus * (1 + (Math.min(log, steps) / 1.28));
+  var xBonus = (x + stepBonus) ** 0.3;
   
-  return (((log + timeBonus + tinyBonus + xBonus) + 2) * (stepBonus * (1 + (Math.PI / 10)))) + (Math.min(log, steps) / 1.876);
+  return (((log + timeBonus + tinyBonus + xBonus + stepBonus) + 2) * (stepMulti * (1 + (Math.PI / 10)))) + (Math.min(log, steps) / 1.876);
 }
 
 // first function for newbies
