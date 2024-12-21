@@ -344,7 +344,20 @@ window.onload = function() {
     
     var ft = ((p - fdt) / 1000);
     
-    var l = equationVal(ft); 
+    var l = equationVal(ft);
+
+    // if the level value is bigger than 100,000
+    if (l >= 100000000) {
+      document.getElementById("level").innerHTML = "Level: " + l.toExponential(4);
+    } else if (l >= 10000000) {
+      document.getElementById("level").innerHTML = "Level: " + Math.trunc(l);
+    } else if (l >= 1000000) {
+      document.getElementById("level").innerHTML = "Level: " + l.toFixed(1);
+    } else if (l >= 100000) {
+      document.getElementById("level").innerHTML = "Level: " + l.toFixed(2);
+    } else {
+      document.getElementById("level").innerHTML = "Level: " + l.toFixed(3);
+    } 
     
     document.getElementById("level").innerHTML = "Level: " + l.toFixed(3);
     
